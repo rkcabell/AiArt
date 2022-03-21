@@ -69,15 +69,24 @@ class Frame:
         exitBtn = tk.Button(self.root, text="Exit Program",
                             command=self.root.quit)
         # Button Placements
-        refreshBtn.place(x=50, y=100)
-        chooseImageBtn.place(x=50, y=150)
-        removeImageBtn.place(x=50, y=200)
-        findPaletteBtn.place(x=50, y=250)
-        exitBtn.place(x=50, y=300)
+        buttonList = []
+        buttonList.append(refreshBtn)
+        buttonList.append(chooseImageBtn)
+        buttonList.append(removeImageBtn)
+        buttonList.append(findPaletteBtn)
+        buttonList.append(exitBtn)
+        for i in range(len(buttonList)):
+            buttonList[i].place(x=i*50, y=(i*50)+100)
 
-        # Todo: undo
+        #refreshBtn.place(x=50, y=100)
+        #chooseImageBtn.place(x=50, y=150)
+        #removeImageBtn.place(x=50, y=200)
+        #findPaletteBtn.place(x=50, y=250)
+        #exitBtn.place(x=50, y=300)
 
-        # Todo: redo
+        # Todo: undo FIFO
+
+        # Todo: redo FIFO
 
         #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 
@@ -124,21 +133,46 @@ class Frame:
         user_canvas.create_image(self.image_bg.width/2, 0,
                                  image=self.tk_user_image, anchor="center")
 
-    # Find top common colors and display
-    # TODO: display
+    # Find top common colors and display them
+    # on labels below the canvas
+    # TODO: define range for NUM_COLORS
     def findColorPalette(self):
-        palette = pd.Edit().findColorPalette(5, self.user_image)
-        for i in range(len(palette)):
-            palette[i] = "#" + self.rgb_to_hex(
-                palette[i][0], palette[i][1], palette[i][2])
-        colorTestLbl = Label(self.root, bg=palette[0])
+        # between 5 and X
+        NUM_COLORS = 5
+        labelList = []
+        # Convert palette colors to hex values
+        palette_rgb = pd.Edit().findColorPalette(self, NUM_COLORS, self.user_image)
+        palette_hex = self.ConvertPaletteToHex(palette_rgb)
+        # add labels to list then display
+        print(palette_hex)
+        for color in range(len(palette_hex)):
+            labelList.append(
+                tk.Label(self.root, height=7, width=5, padx=4, bg=palette_hex[color]))
+        print(labelList)
+        for i in range(len(labelList)):
+            labelList[i].place(
+                x=(i*50)+600,
+                y=656)
 
-    def rgb_to_hex(self, r, g, b):
+    def rgbToHex(self, r, g, b):
         return ('{:X}{:X}{:X}').format(r, g, b)
+
+    # Method to clean findColorPalette by reducing clutter
+    # @palette : default dict where elements are int[2], and ints are 0-255
+    # @palette : example element: [255, 255, 255]
+    def ConvertPaletteToHex(self, palette):
+        for i in range(len(palette)):
+            palette[i] = "#" + ('{:X}{:X}{:X}').format(
+                palette[i][0],
+                palette[i][1],
+                palette[i][2])
+        return palette
+
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 
     # Start method
+
     def main(self):
         self.root.mainloop()
 

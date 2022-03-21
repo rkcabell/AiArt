@@ -5,14 +5,18 @@ import tkinter as tk
 from tkinter import *
 from collections import defaultdict
 
+
 class Edit:
-    # Generate 5 most common colors in the image
+    # Generate 1-X most common colors in the image\
+    # Todo: decide on range of labels
     @staticmethod
-    def findColorPalette(num, image):
-        # default value for num = 5
-        if (num < 0):
-            num = 5
-        
+    def findColorPalette(self, num, image):
+        # using recursion to bug-check
+        # Pros: looks cool, Cons: impacts performance
+        if (num < 1):
+            self.findColorPalette(num+1, image)
+            return
+
         pallete = defaultdict(int)
         for pixel in image.getdata():
             pallete[pixel] += 1
