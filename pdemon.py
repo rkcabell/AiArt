@@ -3,7 +3,7 @@ import PIL.Image
 import PIL.ImageTk
 import tkinter as tk
 from tkinter import *
-
+from collections import defaultdict
 
 class Edit:
     # Generate 5 most common colors in the image
@@ -12,7 +12,7 @@ class Edit:
         # default value for num = 5
         if (num < 0):
             num = 5
-        from collections import defaultdict
+        
         pallete = defaultdict(int)
         for pixel in image.getdata():
             pallete[pixel] += 1
